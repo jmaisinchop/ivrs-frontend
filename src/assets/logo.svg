@@ -1,0 +1,4 @@
+<!-- src/assets/logo.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
+    <path fill="#3b82f6" d="M12 2L2 7l10 5 10-5-10-5zm0 6.18L4.24 7 12 3.82 19.76 7 12 8.18z" />
+</svg>
