@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { useWhatsappSocket } from '../hooks/useWhatsappSocket';
 import { WhatsappConnection } from '../components/whatsapp/WhatsappConnection';
 import { WhatsappSender } from '../components/whatsapp/WhatsappSender';
-import { WhatsappCampaigns } from '../components/whatsapp/WhatsappCampaigns';
+import  WhatsappCampaigns  from '../components/whatsapp/WhatsappCampaigns';
 import { startWhatsappSessionAPI, sendWhatsappMessageAPI } from '../services/api';
 
 const WhatsappPage = () => {
