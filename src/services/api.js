@@ -1,8 +1,9 @@
 import axios from "axios";
 
-// Creamos instancia base
+const baseURL = '/api';
+
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL,
 });
 
 // Interceptor para inyectar el token
@@ -16,6 +17,7 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+export const WHATSAPP_WS_URL = import.meta.env.VITE_WHATSAPP_WS_URL;
 
 /* ================== AUTH ================== */
 export const loginAPI = (username, password) =>

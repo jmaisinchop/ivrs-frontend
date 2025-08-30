@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import { AuthContext } from '../contexts/AuthContext';
 import { getWhatsappStatusAPI } from '../services/api';
-
+import { WHATSAPP_WS_URL } from '../services/api'; // <-- Importa la URL
 export const useWhatsappSocket = () => {
     const { user } = useContext(AuthContext);
     const [status, setStatus] = useState('loading');
@@ -30,7 +30,7 @@ export const useWhatsappSocket = () => {
 
         initialize();
 
-        socket = io('http://localhost:3001');
+        socket = io(WHATSAPP_WS_URL);
         socket.on('connect_error', handleError);
 
         socket.on(`whatsapp-qr-${user.id}`, (qr) => {

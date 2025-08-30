@@ -11,9 +11,8 @@ export const useDashboardSocket = (setStats) => {
   useEffect(() => {
     if (!user) return;
 
-    // Conectamos al namespace del dashboard
     const socket = io(VITE_API_URL, {
-      path: '/socket.io', // Asegúrate de que el path sea correcto si tienes una configuración específica
+      path: '/socket.io', 
     });
 
     socket.on('connect', () => {
