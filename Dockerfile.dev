@@ -1,0 +1,23 @@
+# Usa una imagen base de Node.js
+FROM node:20-alpine
+
+# Instala curl para futuras verificaciones si las necesitas
+RUN apk add --no-cache curl
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Copia los archivos de dependencias
+COPY package*.json ./
+
+# Instala TODAS las dependencias
+RUN npm install
+
+# Copia el resto del código
+COPY . .
+
+# Expone el puerto del servidor de desarrollo de Vite
+EXPOSE 5173
+
+# Comando para iniciar en modo desarrollo
+CMD ["npm", "run", "dev"]
