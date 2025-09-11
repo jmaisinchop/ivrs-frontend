@@ -17,6 +17,7 @@ export const CreateUserModal = ({ show, onClose, onUserCreated }) => {
         role: "CALLCENTER",
         canAccessIvrs: true,
         canAccessWhatsapp: true,
+        extension: "",
     });
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +37,7 @@ export const CreateUserModal = ({ show, onClose, onUserCreated }) => {
         if (formulario.password.length < 6) {
             return toast.warn("La contraseña debe tener al menos 6 caracteres.");
         }
-        
+
         setLoading(true);
         try {
             const { data: newUser } = await createUserAPI(formulario);
@@ -59,23 +60,24 @@ export const CreateUserModal = ({ show, onClose, onUserCreated }) => {
                 </div>
                 <InputField label="Nombre de Usuario*" name="username" value={formulario.username} onChange={handleChange} required />
                 <InputField label="Correo Electrónico*" name="email" type="email" value={formulario.email} onChange={handleChange} required />
-                <InputField 
-                    label="Contraseña*" 
-                    name="password" 
-                    type={showPassword ? "text" : "password"} 
-                    value={formulario.password} 
-                    onChange={handleChange} 
-                    required 
+                <InputField label="Extensión / Teléfono" name="extension" value={formulario.extension} onChange={handleChange} placeholder="Ej: 101 o 0991234567" />
+                <InputField
+                    label="Contraseña*"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={formulario.password}
+                    onChange={handleChange}
+                    required
                     Icon={showPassword ? EyeSlashIcon : EyeIcon}
                     onIconClick={() => setShowPassword(!showPassword)}
                 />
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Rol*</label>
-                  <select name="role" value={formulario.role} onChange={handleChange} required className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 focus:ring-2 focus:ring-brand-primary">
-                    <option value="CALLCENTER">Callcenter</option>
-                    <option value="SUPERVISOR">Supervisor</option>
-                    <option value="ADMIN">Administrador</option>
-                  </select>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Rol*</label>
+                    <select name="role" value={formulario.role} onChange={handleChange} required className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 focus:ring-2 focus:ring-brand-primary">
+                        <option value="CALLCENTER">Callcenter</option>
+                        <option value="SUPERVISOR">Supervisor</option>
+                        <option value="ADMIN">Administrador</option>
+                    </select>
                 </div>
                 <div className="pt-2 space-y-3">
                     <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50">

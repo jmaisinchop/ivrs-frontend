@@ -162,6 +162,7 @@ export const cancelWhatsappCampaignAPI = (id) =>
   api.post(`/whatsapp-campaigns/${id}/cancel`);
 
 
+export const spyCallAPI = (contactId) => api.post(`/campaigns/contacts/${contactId}/spy`);
 
 
 export default api;

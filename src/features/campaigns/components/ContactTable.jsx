@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "../../../contexts/ThemeContext";
-import { getContactsLiveAPI, getContactsPagesAPI } from "../../../services/api";
+import { getContactsLiveAPI, getContactsPagesAPI, spyCallAPI } from "../../../services/api";
+import { toast } from "react-toastify";
 import { ChevronLeftIcon, ChevronRightIcon, ArrowPathIcon } from "@heroicons/react/20/solid";
+import { SpeakerWaveIcon } from "@heroicons/react/24/outline"; // <-- CORRECCIÓN AQUÍ
 
 const LIMIT = 50;
 
@@ -77,6 +79,16 @@ const ContactTable = ({ campId }) => {
     const intervalId = setInterval(fetchRows, 2500);
     return () => { mounted = false; clearInterval(intervalId); };
   }, [campId, statusFilter, page]);
+
+  const handleSpy = async (contactId) => {
+    try {
+      toast.info("Iniciando llamada de espionaje...");
+      await spyCallAPI(contactId);
+      toast.success("Te estamos llamando a tu extensión para conectar.");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "No se pudo iniciar el espionaje.");
+    }
+  };
   
   const filterButtonBase = "px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-150 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark-800 focus:ring-brand-primary";
   const filterButtonActive = "bg-brand-primary text-white shadow-sm";
@@ -101,7 +113,7 @@ const ContactTable = ({ campId }) => {
         <table className={`min-w-full divide-y text-sm ${isDarkMode ? 'divide-dark-600' : 'divide-slate-200'}`}>
           <thead className={`${isDarkMode ? 'bg-dark-700/60 backdrop-blur-sm' : 'bg-slate-50/80 backdrop-blur-sm'} sticky top-0 z-10`}>
             <tr>
-              {["Teléfono", "Nombre", "Estado", "Intentos"].map(header => (
+              {["Teléfono", "Nombre", "Estado", "Intentos", "Acción"].map(header => (
                 <th key={header} scope="col" className={`px-4 py-3 text-left font-semibold ${isDarkMode ? 'text-slate-300' : 'text-slate-600'} uppercase tracking-wider`}>
                   {header}
                 </th>
@@ -110,13 +122,13 @@ const ContactTable = ({ campId }) => {
           </thead>
           <tbody className={`divide-y ${isDarkMode ? 'bg-dark-800 divide-dark-700' : 'bg-white divide-slate-100'}`}>
             {firstLoad.current && loading && (
-              <tr><td colSpan={4} className={`px-4 py-10 text-center ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Cargando contactos iniciales...</td></tr>
+              <tr><td colSpan={5} className={`px-4 py-10 text-center ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Cargando contactos iniciales...</td></tr>
             )}
             {!firstLoad.current && error && (
-              <tr><td colSpan={4} className={`px-4 py-10 text-center text-red-500 dark:text-red-400`}>{error}</td></tr>
+              <tr><td colSpan={5} className={`px-4 py-10 text-center text-red-500 dark:text-red-400`}>{error}</td></tr>
             )}
             {!loading && !error && rows.length === 0 && (
-              <tr><td colSpan={4} className={`px-4 py-10 text-center ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>No hay contactos para mostrar.</td></tr>
+              <tr><td colSpan={5} className={`px-4 py-10 text-center ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>No hay contactos para mostrar.</td></tr>
             )}
             {rows.map((r) => (
               <tr key={r.id} className={`transition-colors duration-100 ${isDarkMode ? 'hover:bg-dark-700/70' : 'hover:bg-slate-50/70'}`}>
@@ -124,6 +136,17 @@ const ContactTable = ({ campId }) => {
                 <td className={`px-4 py-2.5 truncate whitespace-nowrap ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{r.name || "-"}</td>
                 <td className="px-4 py-2.5 whitespace-nowrap"><StatePill statusKey={r.callStatus || "PENDING"} /></td>
                 <td className={`px-4 py-2.5 text-center whitespace-nowrap ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{r.attemptCount}</td>
+                <td className="px-4 py-2.5 text-center whitespace-nowrap">
+                  {r.callStatus === 'CALLING' && (
+                    <button 
+                      onClick={() => handleSpy(r.id)} 
+                      title="Espiar esta llamada"
+                      className="p-2 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-blue-500/10 transition-colors"
+                    >
+                      <SpeakerWaveIcon className="h-5 w-5" />
+                    </button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
